@@ -1,3 +1,3 @@
 # Yeah Web
 
-Web runner for Yeah the Ruby video game framework
+Web platform for Yeah the Ruby video game framework
