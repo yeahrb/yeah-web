@@ -8,3 +8,5 @@ end
 require 'yeah/game'
 require 'yeah/space'
 require 'game'
+
+Yeah::Game.subclasses.last.new
