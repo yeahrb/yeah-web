@@ -7,15 +7,15 @@ require 'yeah-web/version'
 Gem::Specification.new do |s|
   s.name = 'yeah-web'
   s.version = Yeah::Web::VERSION
-  s.summary = "Web runner for Yeah the Ruby video game framework"
-
-  s.author = "Artur M. Ostręga"
-  s.email = 'artur.mariusz.ostrega@gmail.com'
-
-  s.files = Dir.glob('{lib,opal}/**/*') + %w(LICENSE.txt README.md)
+  s.summary = "Web platform for Yeah the Ruby video game framework"
 
   s.homepage = 'https://github.com/yeahrb/yeah-web'
   s.license = 'MIT'
+
+  s.author = "Artur Ostręga"
+  s.email = 'artmarost@gmail.com'
+
+  s.files = Dir.glob('{lib,opal}/**/*') + %w(LICENSE.txt README.md)
 
   s.add_runtime_dependency 'opal', '~> 0.9.0.dev'
 end
