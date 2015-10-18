@@ -1,0 +1,2 @@
+class Yeah::Thing
+end
