@@ -10,7 +10,7 @@
     }
 
     body {
-      background: black;
+      background: gray;
       -moz-user-select: none;
       -khtml-user-select: none;
       -webkit-user-select: none;
@@ -19,15 +19,41 @@
     }
 
     canvas {
+      outline: 1px dashed black;
+      margin: auto;
       position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
       width: 100%;
       height: 100%;
+      image-rendering: optimizeSpeed;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: -o-crisp-edges;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: optimize-contrast;
+      image-rendering: crisp-edges;
+      image-rendering: pixelated;
+      -ms-interpolation-mode: nearest-neighbor;
     }
   </style>
+
+  <script>
+    function scaleDisplay() {
+      DISPLAY.$send('scale_to_window');
+    }
+
+    /*document.addEventListener('keydown', function(event) {
+      event.preventDefault();
+    });*/
+  </script>
 </head>
-<body>
-  <canvas></canvas>
+<body onresize="scaleDisplay()" oncontextmenu="return false">
+  <canvas id="yeah-game"></canvas>
 
   <%= javascript_include_tag @server.main %>
+
+  <script>scaleDisplay()</script>
 </body>
 </html>

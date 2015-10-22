@@ -1,4 +1,8 @@
+require 'yeah/display'
+
 class Yeah::Game
+  attr_reader :display
+
   class << self
     private
 
@@ -11,5 +15,9 @@ class Yeah::Game
     def subclasses
       @@subclasses ||= []
     end
+  end
+
+  def initialize
+    @display = Yeah::Display.new
   end
 end
