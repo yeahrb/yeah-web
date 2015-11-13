@@ -17,5 +17,5 @@ Gem::Specification.new do |s|
 
   s.files = Dir.glob('{lib,opal}/**/*') + %w(LICENSE.txt README.md)
 
-  s.add_runtime_dependency 'opal', '~> 0.9.0.dev'
+  s.add_runtime_dependency 'opal', '~> 0.9.0.beta1'
 end
