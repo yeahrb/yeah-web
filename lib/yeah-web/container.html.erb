@@ -36,6 +36,10 @@
       image-rendering: pixelated;
       -ms-interpolation-mode: nearest-neighbor;
     }
+
+    .hidden {
+      display: none;
+    }
   </style>
 
   <script>
@@ -49,7 +53,17 @@
   </script>
 </head>
 <body onresize="scaleDisplay()" oncontextmenu="return false">
-  <canvas id="yeah-game"></canvas>
+  <div id="yeah-assets" class="hidden">
+    <% Dir.chdir('assets') do %>
+      <% Dir.chdir('images') do %>
+        <% Dir['**/*'].select { |p| File.file? p }.each do |image_path| %>
+          <img src="assets/images/<%= image_path %>" data-path="<%= image_path %>" />
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <canvas id="yeah-display"></canvas>
 
   <%= javascript_include_tag @server.main %>
 

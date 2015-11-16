@@ -1,14 +1,19 @@
 class Yeah::Display
   VERTEX_SHADER = <<-glsl
     attribute vec2 a_position;
+    attribute vec2 a_texCoord;
 
     uniform vec2 u_resolution;
+
+    varying vec2 v_texCoord;
 
     void main(void) {
       // Convert the rectangle from pixels to -1.0 to +1.0
       vec2 clip_space = (a_position / u_resolution) * 2.0 - 1.0;
 
       gl_Position = vec4(clip_space, 0.0, 1.0);
+
+      v_texCoord = a_texCoord;
     }
   glsl
 
@@ -16,18 +21,27 @@ class Yeah::Display
     precision mediump float;
 
     uniform vec4 u_color;
+    uniform sampler2D u_image;
+    uniform int u_useTexture;
+
+    varying vec2 v_texCoord;
 
     void main(void) {
-      gl_FragColor = u_color;
+      if (u_useTexture == 1) {
+        gl_FragColor = texture2D(u_image, v_texCoord);
+      } else {
+        gl_FragColor = u_color;
+      }
     }
   glsl
 
   def initialize(options)
-    @canvas = `document.querySelectorAll('canvas#yeah-game')[0]`
+    @canvas = `document.querySelectorAll('canvas#yeah-display')[0]`
     @gl = `#@canvas.getContext('webgl')`
 
     options.each { |k, v| self.send("#{k}=", v) }
 
+    load_images
     initialize_shaders
     scale_to_window
 
@@ -106,7 +120,7 @@ class Yeah::Display
 
   def fill(x, y, width, height, color)
     %x{
-      // Create a buffer containing a single clipspace rectangle
+      // Provide rectangle clipspace coordinates
       var positionLocation = #@gl.getAttribLocation(#@gl_program, "a_position");
       var buffer = #@gl.createBuffer();
       #@gl.bindBuffer(#@gl.ARRAY_BUFFER, buffer);
@@ -127,16 +141,68 @@ class Yeah::Display
       var colorLocation = #@gl.getUniformLocation(#@gl_program, "u_color");
       #@gl.uniform4f(colorLocation, #{color[0]}, #{color[1]}, #{color[2]}, 1);
 
+      // Don't use texture
+      var useTextureLocation = #@gl.getUniformLocation(#@gl_program, "u_useTexture");
+      #@gl.uniform1i(useTextureLocation, 0);
+
       // Draw
       #@gl.drawArrays(#@gl.TRIANGLES, 0, 6);
     }
   end
 
-  def draw_image(x, y, image)
-    puts "[Display] Draw image '#{image}' at (#{x}, #{y})."
+  def draw_image(x, y, image_path)
+    %x{
+      var image = YEAH_DISPLAY_IMAGES[#{image_path}];
+
+      // Provide rectangle clipspace coordinates
+      var positionLocation = #@gl.getAttribLocation(#@gl_program, "a_position");
+      var positionBuffer = #@gl.createBuffer();
+      #@gl.bindBuffer(#@gl.ARRAY_BUFFER, positionBuffer);
+      #@gl.bufferData(
+          #@gl.ARRAY_BUFFER,
+          new Float32Array([
+            #{x}, #{y},
+            #{x} + image.width, #{y},
+            #{x}, #{y} + image.height,
+            #{x}, #{y} + image.height,
+            #{x} + image.width, #{y},
+            #{x} + image.width, #{y} + image.height
+          ]),
+          #@gl.STATIC_DRAW);
+      #@gl.enableVertexAttribArray(positionLocation);
+      #@gl.vertexAttribPointer(positionLocation, 2, #@gl.FLOAT, false, 0, 0);
+
+      // Set texture
+      var texture = #@gl.createTexture();
+      #@gl.bindTexture(#@gl.TEXTURE_2D, texture);
+      #@gl.texParameteri(#@gl.TEXTURE_2D, #@gl.TEXTURE_WRAP_S, #@gl.CLAMP_TO_EDGE);
+      #@gl.texParameteri(#@gl.TEXTURE_2D, #@gl.TEXTURE_WRAP_T, #@gl.CLAMP_TO_EDGE);
+      #@gl.texParameteri(#@gl.TEXTURE_2D, #@gl.TEXTURE_MIN_FILTER, #@gl.NEAREST);
+      #@gl.texParameteri(#@gl.TEXTURE_2D, #@gl.TEXTURE_MAG_FILTER, #@gl.NEAREST);
+      #@gl.texImage2D(#@gl.TEXTURE_2D, 0, #@gl.RGBA, #@gl.RGBA, #@gl.UNSIGNED_BYTE, image);
+
+      // Use texture
+      var useTextureLocation = #@gl.getUniformLocation(#@gl_program, "u_useTexture");
+      #@gl.uniform1i(useTextureLocation, 1);
+
+      // Draw
+      #@gl.drawArrays(#@gl.TRIANGLES, 0, 6);
+    }
   end
 
   private
+
+  def load_images
+    %x{
+      window.YEAH_DISPLAY_IMAGES = {};
+
+      var elements = document.querySelectorAll('#yeah-assets img');
+      for (var i = 0; i < elements.length; i++) {
+        var element = elements[i];
+        YEAH_DISPLAY_IMAGES[element.getAttribute('data-path')] = element;
+      }
+    }
+  end
 
   def initialize_shaders
     %x{
@@ -166,6 +232,24 @@ class Yeah::Display
       }
 
       #@gl.useProgram(#@gl_program);
+
+      // Provide texture coordinates
+      var texCoordLocation = #@gl.getAttribLocation(#@gl_program, "a_texCoord");
+      var texCoordBuffer = #@gl.createBuffer();
+      #@gl.bindBuffer(#@gl.ARRAY_BUFFER, texCoordBuffer);
+      #@gl.bufferData(
+        #@gl.ARRAY_BUFFER,
+        new Float32Array([
+          0.0, 1.0,
+          1.0, 1.0,
+          0.0, 0.0,
+          0.0, 0.0,
+          1.0, 1.0,
+          1.0, 0.0
+        ]),
+        #@gl.STATIC_DRAW);
+      #@gl.enableVertexAttribArray(texCoordLocation);
+      #@gl.vertexAttribPointer(texCoordLocation, 2, #@gl.FLOAT, false, 0, 0);
     }
   end
 end

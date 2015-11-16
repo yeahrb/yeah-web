@@ -9,6 +9,7 @@ class Yeah::Web::Server
         s.main = 'yeah-web'
         s.index_path = File.expand_path("../container.html.erb", __FILE__)
         s.append_path 'src'
+        s.append_path 'assets'
       },
       Port: port
     )
