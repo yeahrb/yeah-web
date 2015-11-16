@@ -59,7 +59,7 @@ class Yeah::Display
 
       #@gl.viewport(0, 0, #{@width}, #{@height});
 
-      var resolutionLocation = #@gl.getUniformLocation(#@shader_program, "u_resolution");
+      var resolutionLocation = #@gl.getUniformLocation(#@gl_program, "u_resolution");
       #@gl.uniform2f(resolutionLocation, #{@width}, #{@height});
     }
   end
@@ -107,7 +107,7 @@ class Yeah::Display
   def fill(x, y, width, height, color)
     %x{
       // Create a buffer containing a single clipspace rectangle
-      var positionLocation = #@gl.getAttribLocation(#@shader_program, "a_position");
+      var positionLocation = #@gl.getAttribLocation(#@gl_program, "a_position");
       var buffer = #@gl.createBuffer();
       #@gl.bindBuffer(#@gl.ARRAY_BUFFER, buffer);
       #@gl.bufferData(
@@ -124,7 +124,7 @@ class Yeah::Display
       #@gl.vertexAttribPointer(positionLocation, 2, #@gl.FLOAT, false, 0, 0);
 
       // Set color
-      var colorLocation = #@gl.getUniformLocation(#@shader_program, "u_color");
+      var colorLocation = #@gl.getUniformLocation(#@gl_program, "u_color");
       #@gl.uniform4f(colorLocation, #{color[0]}, #{color[1]}, #{color[2]}, 1);
 
       // Draw
@@ -156,16 +156,16 @@ class Yeah::Display
         #{raise `#@gl.getShaderInfoLog(fragmentShader)`}
       }
 
-      #@shader_program = #@gl.createProgram();
-      #@gl.attachShader(#@shader_program, vertexShader);
-      #@gl.attachShader(#@shader_program, fragmentShader);
-      #@gl.linkProgram(#@shader_program);
+      #@gl_program = #@gl.createProgram();
+      #@gl.attachShader(#@gl_program, vertexShader);
+      #@gl.attachShader(#@gl_program, fragmentShader);
+      #@gl.linkProgram(#@gl_program);
 
-      if (!#@gl.getProgramParameter(#@shader_program, #@gl.LINK_STATUS)) {
+      if (!#@gl.getProgramParameter(#@gl_program, #@gl.LINK_STATUS)) {
         #{raise "Could not link shader program"}
       }
 
-      #@gl.useProgram(#@shader_program);
+      #@gl.useProgram(#@gl_program);
     }
   end
 end
