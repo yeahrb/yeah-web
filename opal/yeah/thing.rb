@@ -19,6 +19,6 @@ class Yeah::Thing
     self.x, self.y = value
   end
 
-  def act(input, space)
+  def act(input, space, elapsed)
   end
 end

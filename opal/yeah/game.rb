@@ -27,6 +27,19 @@ class Yeah::Game
     @display = Yeah::Display.new(self.class.display.to_h)
     @space = self.class.space.new(self)
 
-    `window.setInterval(function() { #{@space.step(self)} }, 1000)`
+    %x{
+      var now,
+          lastNow = Date.now();
+
+      var loop = function() {
+        now = Date.now();
+        #{@space.step(`(now - lastNow) / 1000.0`)}
+        lastNow = now;
+
+        window.requestAnimationFrame(loop);
+      }
+
+      window.requestAnimationFrame(loop);
+    }
   end
 end

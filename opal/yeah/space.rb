@@ -40,8 +40,8 @@ class Yeah::Space
     @game.display.clear_color = value
   end
 
-  def step
-    things.each { |t| t.act(nil, self) }
+  def step(elapsed)
+    things.each { |t| t.act(nil, self, elapsed) }
     @game.display.clear
     things.each { |t| t.look.draw(t, @game.display) }
   end
