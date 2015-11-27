@@ -16,9 +16,11 @@ class Yeah::FillLook < Yeah::Look
   attr_accessor :width, :height, :color
 
   def initialize
-    self.width = self.class.width
-    self.height = self.class.height
-    self.color = self.class.color
+    super
+
+    @width = self.class.width
+    @height = self.class.height
+    @color = self.class.color
   end
 
   def size

@@ -8,6 +8,8 @@ class Yeah::ImageLook < Yeah::Look
   attr_accessor :image
 
   def initialize
+    super
+
     self.image = self.class.image
   end
 

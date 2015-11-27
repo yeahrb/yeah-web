@@ -1,6 +1,6 @@
 class Yeah::Space
   class << self
-    attr_accessor :width, :height, :clear_color
+    attr_accessor :width, :height, :color
 
     def size
       [width, height]
@@ -17,7 +17,7 @@ class Yeah::Space
   def initialize(game)
     @game = game
     self.size = self.class.size
-    self.clear_color = self.class.clear_color
+    @game.display.clear_color = self.class.color
   end
 
   def things
@@ -32,16 +32,12 @@ class Yeah::Space
     self.width, self.height = value
   end
 
-  def clear_color
-    @game.display.clear_color
-  end
-
-  def clear_color=(value)
-    @game.display.clear_color = value
+  def color
+    self.class.color
   end
 
   def step(elapsed)
-    things.each { |t| t.act(nil, self, elapsed) }
+    things.each { |t| t.act(elapsed) }
     @game.display.clear
     things.each { |t| t.look.draw(t, @game.display) }
   end

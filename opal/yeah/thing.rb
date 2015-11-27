@@ -3,12 +3,14 @@ class Yeah::Thing
     attr_accessor :look
   end
 
+  attr_reader :game
   attr_accessor :x, :y, :look
 
   def initialize(options)
-    self.look = self.class.look.new
+    @look = self.class.look.new
 
-    options.each { |k, v| self.send("#{k}=", v) }
+    # Assign options.
+    options.each { |k, v| instance_variable_set("@#{k}", v) }
   end
 
   def position
@@ -19,6 +21,25 @@ class Yeah::Thing
     self.x, self.y = value
   end
 
-  def act(input, space, elapsed)
+  def act(elapsed)
+    return
+  end
+
+  def collide(collision)
+    return
+  end
+
+  protected
+
+  def display
+    game.display
+  end
+
+  def keyboard
+    game.keyboard
+  end
+
+  def space
+    game.space
   end
 end
