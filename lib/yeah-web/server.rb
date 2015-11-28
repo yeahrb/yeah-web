@@ -1,5 +1,6 @@
 require 'rack'
 require 'opal'
+require 'tilt/erb'
 
 class Yeah::Web::Server
   def initialize(port = 1234)
