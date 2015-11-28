@@ -12,12 +12,12 @@ class Yeah::Space
   end
 
   attr_reader :game
-  attr_accessor :width, :height
+  attr_accessor :width, :height, :color
 
   def initialize(game)
     @game = game
     self.size = self.class.size
-    @game.display.clear_color = self.class.color
+    self.color = self.class.color
   end
 
   def things
@@ -32,8 +32,9 @@ class Yeah::Space
     self.width, self.height = value
   end
 
-  def color
-    self.class.color
+  def color=(value)
+    @color = value
+    @game.display.clear_color = value
   end
 
   def step(elapsed)
