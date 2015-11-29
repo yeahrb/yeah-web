@@ -6,7 +6,7 @@ class Yeah::Game
   attr_reader :display, :keyboard, :mouse, :space
 
   class << self
-    attr_accessor :space, :title
+    attr_accessor :title, :space
 
     private
 
@@ -32,6 +32,8 @@ class Yeah::Game
     @space = self.class.space.new(self)
 
     %x{
+      document.getElementsByTagName('title')[0].innerHTML = #{title};
+
       var now,
           lastNow = Date.now();
 
@@ -39,8 +41,8 @@ class Yeah::Game
         now = Date.now();
 
         #{@space.step(`(now - lastNow) / 1000.0`)}
-        #{keyboard.step}
-        #{mouse.step}
+        #{@keyboard.step}
+        #{@mouse.step}
 
         lastNow = now;
 
@@ -49,5 +51,9 @@ class Yeah::Game
 
       window.requestAnimationFrame(loop);
     }
+  end
+
+  def title
+    self.class.title
   end
 end
