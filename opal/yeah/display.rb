@@ -39,11 +39,10 @@ class Yeah::Display
     @canvas = `document.querySelectorAll('canvas#yeah-display')[0]`
     @gl = `#@canvas.getContext('webgl')`
 
-    options.each { |k, v| self.send("#{k}=", v) }
-
     load_images
     initialize_shaders
-    scale_to_window
+
+    options.each { |k, v| self.send("#{k}=", v) }
 
     `DISPLAY = #{self}`
   end
@@ -83,7 +82,10 @@ class Yeah::Display
   end
   def width=(value)
     @width = value
-    `#@canvas.width = #{value}` unless value.nil?
+
+    `#@canvas.width = #{value}`
+
+    scale_to_window
   end
 
   def height
@@ -91,7 +93,10 @@ class Yeah::Display
   end
   def height=(value)
     @height = value
-    `#@canvas.height = #{value}` unless value.nil?
+
+    `#@canvas.height = #{value}`
+
+    scale_to_window
   end
 
   def size
@@ -100,10 +105,12 @@ class Yeah::Display
   def size=(value)
     @width, @height = value
 
-    unless value.nil?
-      `#@canvas.width = #{value[0]}`
-      `#@canvas.height = #{value[1]}`
-    end
+    %x{
+      #@canvas.width = #{value[0]};
+      #@canvas.height = #{value[1]};
+    }
+
+    scale_to_window
   end
 
   def clear_color
