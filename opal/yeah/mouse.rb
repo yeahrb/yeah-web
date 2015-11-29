@@ -12,13 +12,23 @@ class Yeah::Mouse
   attr_reader :x, :y
 
   def initialize(display)
+    @x = 0
+    @y = 0
     @pressing_buttons = default_buttons
     @pressed_buttons = default_buttons
     @released_buttons = default_buttons
-    @x = 0
-    @y = 0
 
     %x{
+      window.addEventListener('mousemove', function(event) {
+        if (event.offsetX) {
+          #@x = event.offsetX / window.displayScale;
+          #@y = -(event.offsetY / window.displayScale) + #{display.height};
+        } else {
+          #@x = event.layerX / window.displayScale;
+          #@y = -(event.layerY / window.displayScale) + #{display.height};
+        }
+      });
+
       window.addEventListener('mousedown', function(event) {
         #{button = BUTTON_CODE_KEYS[`event.button`]}
 
@@ -33,16 +43,6 @@ class Yeah::Mouse
 
         #{@pressing_buttons[button] = false}
         #{@released_buttons[button] = true}
-      });
-
-      window.addEventListener('mousemove', function(event) {
-        if (event.offsetX) {
-          #@x = event.offsetX / window.displayScale;
-          #@y = -(event.offsetY / window.displayScale) + #{display.height};
-        } else {
-          #@x = event.layerX / window.displayScale;
-          #@y = -(event.layerY / window.displayScale) + #{display.height};
-        }
       });
     }
   end
