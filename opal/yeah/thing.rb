@@ -39,6 +39,10 @@ class Yeah::Thing
     game.keyboard
   end
 
+  def mouse
+    game.mouse
+  end
+
   def space
     game.space
   end

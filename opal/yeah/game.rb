@@ -1,8 +1,9 @@
 require 'yeah/display'
 require 'yeah/keyboard'
+require 'yeah/mouse'
 
 class Yeah::Game
-  attr_reader :display, :keyboard, :space
+  attr_reader :display, :keyboard, :mouse, :space
 
   class << self
     attr_accessor :space, :title
@@ -27,6 +28,7 @@ class Yeah::Game
   def initialize
     @display = Yeah::Display.new(self.class.display.to_h)
     @keyboard = Yeah::Keyboard.new
+    @mouse = Yeah::Mouse.new(@display)
     @space = self.class.space.new(self)
 
     %x{
@@ -38,6 +40,7 @@ class Yeah::Game
 
         #{@space.step(`(now - lastNow) / 1000.0`)}
         #{keyboard.step}
+        #{mouse.step}
 
         lastNow = now;
 
