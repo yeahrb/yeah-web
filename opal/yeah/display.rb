@@ -42,6 +42,7 @@ class Yeah::Display
     load_images
     initialize_shaders
 
+    # Assign options.
     options.each { |k, v| self.send("#{k}=", v) }
 
     `DISPLAY = #{self}`

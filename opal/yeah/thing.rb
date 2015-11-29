@@ -6,11 +6,12 @@ class Yeah::Thing
   attr_reader :game
   attr_accessor :x, :y, :look
 
-  def initialize(options)
+  def initialize(game, options)
+    @game = game
     @look = self.class.look.new
 
     # Assign options.
-    options.each { |k, v| instance_variable_set("@#{k}", v) }
+    options.each { |k, v| self.send("#{k}=", v) }
   end
 
   def position
