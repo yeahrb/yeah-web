@@ -60,12 +60,12 @@ class Yeah::Display
             heightScale = window.innerHeight / canvas.height;
         window.displayScale = Math.min(widthScale, heightScale);
 
-        if (displayScale >= 1) {
-          displayScale = Math.floor(displayScale);
+        if (window.displayScale >= 1) {
+          window.displayScale = Math.floor(window.displayScale);
         }
 
-        var width = canvas.width * displayScale,
-            height = canvas.height * displayScale,
+        var width = canvas.width * window.displayScale,
+            height = canvas.height * window.displayScale,
             sizeStyle = "width:"+width+"px; height:"+height+"px";
 
         canvas.setAttribute('style', sizeStyle);
