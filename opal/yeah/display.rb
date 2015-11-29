@@ -258,6 +258,10 @@ class Yeah::Display
         #@gl.STATIC_DRAW);
       #@gl.enableVertexAttribArray(texCoordLocation);
       #@gl.vertexAttribPointer(texCoordLocation, 2, #@gl.FLOAT, false, 0, 0);
+
+      // Use texture alpha values
+      #@gl.blendFunc(#@gl.SRC_ALPHA, #@gl.ONE_MINUS_SRC_ALPHA);
+      #@gl.enable(#@gl.BLEND);
     }
   end
 end
