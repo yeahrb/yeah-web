@@ -1,37 +1,30 @@
 class Yeah::Display
   VERTEX_SHADER = <<-glsl
     attribute vec2 a_position;
-    attribute vec2 a_texCoord;
+    attribute vec2 a_texCoords;
 
     uniform vec2 u_resolution;
+    uniform vec2 u_texSize;
 
-    varying vec2 v_texCoord;
+    varying vec2 v_texCoords;
 
     void main(void) {
-      // Convert the rectangle from pixels to -1.0 to +1.0
-      vec2 clip_space = (a_position / u_resolution) * 2.0 - 1.0;
+      vec2 clipPosition = (a_position / u_resolution) * 2.0 - 1.0;
+      gl_Position = vec4(clipPosition, 0.0, 1.0);
 
-      gl_Position = vec4(clip_space, 0.0, 1.0);
-
-      v_texCoord = a_texCoord;
+      v_texCoords = a_texCoords / u_texSize;
     }
   glsl
 
   FRAGMENT_SHADER = <<-glsl
     precision mediump float;
 
-    uniform vec4 u_color;
     uniform sampler2D u_image;
-    uniform int u_useTexture;
 
-    varying vec2 v_texCoord;
+    varying vec2 v_texCoords;
 
     void main(void) {
-      if (u_useTexture == 1) {
-        gl_FragColor = texture2D(u_image, v_texCoord);
-      } else {
-        gl_FragColor = u_color;
-      }
+      gl_FragColor = texture2D(u_image, v_texCoords);
     }
   glsl
 
@@ -126,9 +119,9 @@ class Yeah::Display
     `#@gl.clear(#@gl.COLOR_BUFFER_BIT)`
   end
 
-  def fill(x, y, width, height, color)
+  def fill(color, x, y, width, height)
     %x{
-      // Provide rectangle clipspace coordinates
+      // Provide rectangle coordinates
       var positionLocation = #@gl.getAttribLocation(#@gl_program, "a_position");
       var buffer = #@gl.createBuffer();
       #@gl.bindBuffer(#@gl.ARRAY_BUFFER, buffer);
@@ -136,33 +129,34 @@ class Yeah::Display
           #@gl.ARRAY_BUFFER,
           new Float32Array([
             #{x}, #{y},
-            #{x + width}, #{y},
-            #{x}, #{y + height},
-            #{x}, #{y + height},
-            #{x + width}, #{y},
-            #{x + width}, #{y + height}]),
+            #{x} + #{width}, #{y},
+            #{x}, #{y} + #{height},
+            #{x}, #{y} + #{height},
+            #{x} + #{width}, #{y},
+            #{x} + #{width}, #{y} + #{height}]),
           #@gl.STATIC_DRAW);
       #@gl.enableVertexAttribArray(positionLocation);
       #@gl.vertexAttribPointer(positionLocation, 2, #@gl.FLOAT, false, 0, 0);
 
-      // Set color
-      var colorLocation = #@gl.getUniformLocation(#@gl_program, "u_color");
-      #@gl.uniform4f(colorLocation, #{color[0]}, #{color[1]}, #{color[2]}, 1);
-
-      // Don't use texture
-      var useTextureLocation = #@gl.getUniformLocation(#@gl_program, "u_useTexture");
-      #@gl.uniform1i(useTextureLocation, 0);
-
-      // Draw
+      // Use a color texture
+      var texture = #@gl.createTexture();
+      #@gl.bindTexture(#@gl.TEXTURE_2D, texture);
+      #@gl.texImage2D(#@gl.TEXTURE_2D, 0, #@gl.RGBA, 1, 1, 0,
+                      #@gl.RGBA, #@gl.UNSIGNED_BYTE,
+                      new Uint8Array([#{color[0]} * 255,
+                                      #{color[1]} * 255,
+                                      #{color[2]} * 255,
+                                      255]));
+      // Draw rectangle
       #@gl.drawArrays(#@gl.TRIANGLES, 0, 6);
     }
   end
 
-  def draw_image(x, y, image_path)
+  def draw_image(image_path, x, y)
     %x{
       var image = YEAH_DISPLAY_IMAGES[#{image_path}];
 
-      // Provide rectangle clipspace coordinates
+      // Provide rectangle coordinates
       var positionLocation = #@gl.getAttribLocation(#@gl_program, "a_position");
       var positionBuffer = #@gl.createBuffer();
       #@gl.bindBuffer(#@gl.ARRAY_BUFFER, positionBuffer);
@@ -180,6 +174,28 @@ class Yeah::Display
       #@gl.enableVertexAttribArray(positionLocation);
       #@gl.vertexAttribPointer(positionLocation, 2, #@gl.FLOAT, false, 0, 0);
 
+      // Provide texture coordinates
+      var texCoordsLocation = #@gl.getAttribLocation(#@gl_program, "a_texCoords");
+      var texCoordsBuffer = #@gl.createBuffer();
+      #@gl.bindBuffer(#@gl.ARRAY_BUFFER, texCoordsBuffer);
+      #@gl.bufferData(
+        #@gl.ARRAY_BUFFER,
+        new Float32Array([
+          0, image.height,
+          image.width, image.height,
+          0, 0,
+          0, 0,
+          image.width, image.height,
+          image.width, 0
+        ]),
+        #@gl.STATIC_DRAW);
+      #@gl.enableVertexAttribArray(texCoordsLocation);
+      #@gl.vertexAttribPointer(texCoordsLocation, 2, #@gl.FLOAT, false, 0, 0);
+
+      // Set texture size
+      var texSizeLocation = #@gl.getUniformLocation(#@gl_program, "u_texSize");
+      #@gl.uniform2f(texSizeLocation, image.width, image.height);
+
       // Set texture
       var texture = #@gl.createTexture();
       #@gl.bindTexture(#@gl.TEXTURE_2D, texture);
@@ -189,11 +205,65 @@ class Yeah::Display
       #@gl.texParameteri(#@gl.TEXTURE_2D, #@gl.TEXTURE_MAG_FILTER, #@gl.NEAREST);
       #@gl.texImage2D(#@gl.TEXTURE_2D, 0, #@gl.RGBA, #@gl.RGBA, #@gl.UNSIGNED_BYTE, image);
 
-      // Use texture
-      var useTextureLocation = #@gl.getUniformLocation(#@gl_program, "u_useTexture");
-      #@gl.uniform1i(useTextureLocation, 1);
-
       // Draw
+      #@gl.drawArrays(#@gl.TRIANGLES, 0, 6);
+    }
+  end
+
+  def draw_image_part(image_path, x, y, part_x, part_y, part_width, part_height)
+    %x{
+      var image = YEAH_DISPLAY_IMAGES[#{image_path}];
+
+      // Provide rectangle coordinates
+      var positionLocation = #@gl.getAttribLocation(#@gl_program, "a_position");
+      var positionBuffer = #@gl.createBuffer();
+      #@gl.bindBuffer(#@gl.ARRAY_BUFFER, positionBuffer);
+      #@gl.bufferData(
+          #@gl.ARRAY_BUFFER,
+          new Float32Array([
+            #{x}, #{y},
+            #{x} + #{part_width}, #{y},
+            #{x}, #{y} + #{part_height},
+            #{x}, #{y} + #{part_height},
+            #{x} + #{part_width}, #{y},
+            #{x} + #{part_width}, #{y} + #{part_height}
+          ]),
+          #@gl.STATIC_DRAW);
+      #@gl.enableVertexAttribArray(positionLocation);
+      #@gl.vertexAttribPointer(positionLocation, 2, #@gl.FLOAT, false, 0, 0);
+
+      // Provide texture coordinates
+      var texCoordsLocation = #@gl.getAttribLocation(#@gl_program, "a_texCoords");
+      var texCoordsBuffer = #@gl.createBuffer();
+      #@gl.bindBuffer(#@gl.ARRAY_BUFFER, texCoordsBuffer);
+      #@gl.bufferData(
+        #@gl.ARRAY_BUFFER,
+        new Float32Array([
+          #{part_x}, #{part_y} + #{part_height},
+          #{part_x} + #{part_width}, #{part_y} + #{part_height},
+          #{part_x}, #{part_y},
+          #{part_x}, #{part_y},
+          #{part_x} + #{part_width}, #{part_y} + #{part_height},
+          #{part_x} + #{part_width}, #{part_y}
+        ]),
+        #@gl.STATIC_DRAW);
+      #@gl.enableVertexAttribArray(texCoordsLocation);
+      #@gl.vertexAttribPointer(texCoordsLocation, 2, #@gl.FLOAT, false, 0, 0);
+
+      // Set texture size
+      var texSizeLocation = #@gl.getUniformLocation(#@gl_program, "u_texSize");
+      #@gl.uniform2f(texSizeLocation, image.width, image.height);
+
+      // Set texture
+      var texture = #@gl.createTexture();
+      #@gl.bindTexture(#@gl.TEXTURE_2D, texture);
+      #@gl.texParameteri(#@gl.TEXTURE_2D, #@gl.TEXTURE_WRAP_S, #@gl.CLAMP_TO_EDGE);
+      #@gl.texParameteri(#@gl.TEXTURE_2D, #@gl.TEXTURE_WRAP_T, #@gl.CLAMP_TO_EDGE);
+      #@gl.texParameteri(#@gl.TEXTURE_2D, #@gl.TEXTURE_MIN_FILTER, #@gl.NEAREST);
+      #@gl.texParameteri(#@gl.TEXTURE_2D, #@gl.TEXTURE_MAG_FILTER, #@gl.NEAREST);
+      #@gl.texImage2D(#@gl.TEXTURE_2D, 0, #@gl.RGBA, #@gl.RGBA, #@gl.UNSIGNED_BYTE, image);
+
+      // Draw rectangle
       #@gl.drawArrays(#@gl.TRIANGLES, 0, 6);
     }
   end
@@ -240,24 +310,6 @@ class Yeah::Display
       }
 
       #@gl.useProgram(#@gl_program);
-
-      // Provide texture coordinates
-      var texCoordLocation = #@gl.getAttribLocation(#@gl_program, "a_texCoord");
-      var texCoordBuffer = #@gl.createBuffer();
-      #@gl.bindBuffer(#@gl.ARRAY_BUFFER, texCoordBuffer);
-      #@gl.bufferData(
-        #@gl.ARRAY_BUFFER,
-        new Float32Array([
-          0.0, 1.0,
-          1.0, 1.0,
-          0.0, 0.0,
-          0.0, 0.0,
-          1.0, 1.0,
-          1.0, 0.0
-        ]),
-        #@gl.STATIC_DRAW);
-      #@gl.enableVertexAttribArray(texCoordLocation);
-      #@gl.vertexAttribPointer(texCoordLocation, 2, #@gl.FLOAT, false, 0, 0);
 
       // Use texture alpha values
       #@gl.blendFunc(#@gl.SRC_ALPHA, #@gl.ONE_MINUS_SRC_ALPHA);

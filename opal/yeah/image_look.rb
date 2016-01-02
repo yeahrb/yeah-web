@@ -14,6 +14,6 @@ class Yeah::ImageLook < Yeah::Look
   end
 
   def draw(thing, display)
-    display.draw_image(thing.x, thing.y, image)
+    display.draw_image(image, thing.x, thing.y)
   end
 end

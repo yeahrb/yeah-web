@@ -32,6 +32,6 @@ class Yeah::FillLook < Yeah::Look
   end
 
   def draw(thing, display)
-    display.fill(thing.x, thing.y, width, height, color)
+    display.fill(color, thing.x, thing.y, width, height)
   end
 end
