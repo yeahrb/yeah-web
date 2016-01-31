@@ -1,6 +1,7 @@
 require 'yeah/display'
 require 'yeah/keyboard'
 require 'yeah/mouse'
+require 'yeah/space'
 
 class Yeah::Game
   attr_reader :display, :keyboard, :mouse, :space
@@ -31,9 +32,11 @@ class Yeah::Game
     @mouse = Yeah::Mouse.new(@display)
     @space = self.class.space.new(self)
 
-    %x{
-      document.getElementsByTagName('title')[0].innerHTML = #{title};
+    # Set web page title.
+    `document.getElementsByTagName('title')[0].innerHTML = #{title}`
 
+    # Start game loop.
+    %x{
       var now,
           lastNow = Date.now();
 

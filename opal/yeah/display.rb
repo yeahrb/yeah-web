@@ -32,7 +32,6 @@ class Yeah::Display
     @canvas = `document.querySelectorAll('canvas#yeah-display')[0]`
     @gl = `#@canvas.getContext('webgl')`
 
-    load_images
     initialize_shaders
 
     # Assign options.
@@ -152,9 +151,10 @@ class Yeah::Display
     }
   end
 
-  def draw_image(image_path, x, y)
+  def draw_image(image, x, y)
     %x{
-      var image = YEAH_DISPLAY_IMAGES[#{image_path}];
+      var image = #{image.native};
+      console.debug('draw_image image.native:', image);
 
       // Provide rectangle coordinates
       var positionLocation = #@gl.getAttribLocation(#@gl_program, "a_position");
@@ -210,9 +210,10 @@ class Yeah::Display
     }
   end
 
-  def draw_image_part(image_path, x, y, part_x, part_y, part_width, part_height)
+  def draw_image_part(image, x, y, part_x, part_y, part_width, part_height)
     %x{
-      var image = YEAH_DISPLAY_IMAGES[#{image_path}];
+      var image = #{image.native};
+      console.debug('draw_image_part image.native:', image);
 
       // Provide rectangle coordinates
       var positionLocation = #@gl.getAttribLocation(#@gl_program, "a_position");
@@ -261,7 +262,7 @@ class Yeah::Display
       #@gl.texParameteri(#@gl.TEXTURE_2D, #@gl.TEXTURE_WRAP_T, #@gl.CLAMP_TO_EDGE);
       #@gl.texParameteri(#@gl.TEXTURE_2D, #@gl.TEXTURE_MIN_FILTER, #@gl.NEAREST);
       #@gl.texParameteri(#@gl.TEXTURE_2D, #@gl.TEXTURE_MAG_FILTER, #@gl.NEAREST);
-      #@gl.texImage2D(#@gl.TEXTURE_2D, 0, #@gl.RGBA, #@gl.RGBA, #@gl.UNSIGNED_BYTE, image);
+      #@gl.texImage2D(#@gl.TEXTURE_2D, 0, #@gl.RGBA, #@gl.RGBA, #@gl.UNSIGNED_BYTE, nativeImage);
 
       // Draw rectangle
       #@gl.drawArrays(#@gl.TRIANGLES, 0, 6);
@@ -269,18 +270,6 @@ class Yeah::Display
   end
 
   private
-
-  def load_images
-    %x{
-      window.YEAH_DISPLAY_IMAGES = {};
-
-      var elements = document.querySelectorAll('#yeah-assets img');
-      for (var i = 0; i < elements.length; i++) {
-        var element = elements[i];
-        YEAH_DISPLAY_IMAGES[element.getAttribute('data-path')] = element;
-      }
-    }
-  end
 
   def initialize_shaders
     %x{

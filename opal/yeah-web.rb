@@ -5,9 +5,11 @@ module Yeah
   end
 end
 
+require 'yeah/asset_loader'
 require 'yeah/game'
-require 'yeah/space'
 
-require 'game'
+Yeah::AssetLoader.load_all do
+  require 'game'
 
-Yeah::Game.subclasses.last.new
+  Yeah::Game.subclasses.last.new
+end

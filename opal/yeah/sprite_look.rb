@@ -1,5 +1,3 @@
-require 'yeah/image_look'
-
 class Yeah::SpriteLook < Yeah::ImageLook
   class << self
     attr_accessor :width, :height, :animations
@@ -33,10 +31,10 @@ class Yeah::SpriteLook < Yeah::ImageLook
   end
 
   def draw(thing, display)
-    x = @frame * @width % 576
-    y = (@frame * @width / 576).floor * @height
+    x = @frame * @width % @image.width
+    y = (@frame * @width / @image.width).floor * @height
     display.draw_image_part(@image, thing.x, thing.y, x, y, @width, @height)
     @frame += 1
-    @frame = 0 if @frame >= (576 / @width) * (256 / @height)
+    @frame = 0 if @frame >= (@image.width / @width) * (@image.height / @height)
   end
 end
