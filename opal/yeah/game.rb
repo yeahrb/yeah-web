@@ -1,8 +1,3 @@
-require 'yeah/display'
-require 'yeah/keyboard'
-require 'yeah/mouse'
-require 'yeah/space'
-
 class Yeah::Game
   attr_reader :display, :keyboard, :mouse, :space
 

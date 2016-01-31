@@ -1,5 +1,3 @@
-require 'yeah/look'
-
 class Yeah::ImageLook < Yeah::Look
   class << self
     attr_accessor :image

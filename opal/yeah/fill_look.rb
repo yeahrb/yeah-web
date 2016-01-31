@@ -1,5 +1,3 @@
-require 'yeah/look' #
-
 class Yeah::FillLook < Yeah::Look
   class << self
     attr_accessor :width, :height, :color
