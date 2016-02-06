@@ -36,10 +36,6 @@
       image-rendering: pixelated;
       -ms-interpolation-mode: nearest-neighbor;
     }
-
-    .hidden {
-      display: none;
-    }
   </style>
 
   <script>
@@ -47,26 +43,18 @@
       DISPLAY.$send('scale_to_window');
     }
 
+    <% Dir.chdir('assets/images') do %>
+    window.YEAH_IMAGE_PATHS = <%= Dir['**/*'].select { |p| File.file? p } %>;
+    <% end %>
+
     /*document.addEventListener('keydown', function(event) {
       event.preventDefault();
     });*/
   </script>
 </head>
 <body onresize="scaleDisplay()" oncontextmenu="return false">
-  <div id="yeah-assets" class="hidden">
-    <% Dir.chdir('assets') do %>
-      <% Dir.chdir('images') do %>
-        <% Dir['**/*'].select { |p| File.file? p }.each do |image_path| %>
-          <img src="assets/images/<%= image_path %>" data-path="<%= image_path %>" />
-        <% end %>
-      <% end %>
-    <% end %>
-  </div>
-
   <canvas id="yeah-display"></canvas>
 
   <%= javascript_include_tag @server.main %>
-
-  <script>scaleDisplay()</script>
 </body>
 </html>

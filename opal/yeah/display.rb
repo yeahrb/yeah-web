@@ -153,8 +153,7 @@ class Yeah::Display
 
   def draw_image(image, x, y)
     %x{
-      var image = #{image.native};
-      console.debug('draw_image image.native:', image);
+      var nativeImage = #{image.native};
 
       // Provide rectangle coordinates
       var positionLocation = #@gl.getAttribLocation(#@gl_program, "a_position");
@@ -164,11 +163,11 @@ class Yeah::Display
           #@gl.ARRAY_BUFFER,
           new Float32Array([
             #{x}, #{y},
-            #{x} + image.width, #{y},
-            #{x}, #{y} + image.height,
-            #{x}, #{y} + image.height,
-            #{x} + image.width, #{y},
-            #{x} + image.width, #{y} + image.height
+            #{x} + nativeImage.width, #{y},
+            #{x}, #{y} + nativeImage.height,
+            #{x}, #{y} + nativeImage.height,
+            #{x} + nativeImage.width, #{y},
+            #{x} + nativeImage.width, #{y} + nativeImage.height
           ]),
           #@gl.STATIC_DRAW);
       #@gl.enableVertexAttribArray(positionLocation);
@@ -181,12 +180,12 @@ class Yeah::Display
       #@gl.bufferData(
         #@gl.ARRAY_BUFFER,
         new Float32Array([
-          0, image.height,
-          image.width, image.height,
+          0, nativeImage.height,
+          nativeImage.width, nativeImage.height,
           0, 0,
           0, 0,
-          image.width, image.height,
-          image.width, 0
+          nativeImage.width, nativeImage.height,
+          nativeImage.width, 0
         ]),
         #@gl.STATIC_DRAW);
       #@gl.enableVertexAttribArray(texCoordsLocation);
@@ -194,7 +193,7 @@ class Yeah::Display
 
       // Set texture size
       var texSizeLocation = #@gl.getUniformLocation(#@gl_program, "u_texSize");
-      #@gl.uniform2f(texSizeLocation, image.width, image.height);
+      #@gl.uniform2f(texSizeLocation, nativeImage.width, nativeImage.height);
 
       // Set texture
       var texture = #@gl.createTexture();
@@ -203,7 +202,7 @@ class Yeah::Display
       #@gl.texParameteri(#@gl.TEXTURE_2D, #@gl.TEXTURE_WRAP_T, #@gl.CLAMP_TO_EDGE);
       #@gl.texParameteri(#@gl.TEXTURE_2D, #@gl.TEXTURE_MIN_FILTER, #@gl.NEAREST);
       #@gl.texParameteri(#@gl.TEXTURE_2D, #@gl.TEXTURE_MAG_FILTER, #@gl.NEAREST);
-      #@gl.texImage2D(#@gl.TEXTURE_2D, 0, #@gl.RGBA, #@gl.RGBA, #@gl.UNSIGNED_BYTE, image);
+      #@gl.texImage2D(#@gl.TEXTURE_2D, 0, #@gl.RGBA, #@gl.RGBA, #@gl.UNSIGNED_BYTE, nativeImage);
 
       // Draw
       #@gl.drawArrays(#@gl.TRIANGLES, 0, 6);
@@ -212,8 +211,7 @@ class Yeah::Display
 
   def draw_image_part(image, x, y, part_x, part_y, part_width, part_height)
     %x{
-      var image = #{image.native};
-      console.debug('draw_image_part image.native:', image);
+      var nativeImage = #{image.native};
 
       // Provide rectangle coordinates
       var positionLocation = #@gl.getAttribLocation(#@gl_program, "a_position");
@@ -253,7 +251,7 @@ class Yeah::Display
 
       // Set texture size
       var texSizeLocation = #@gl.getUniformLocation(#@gl_program, "u_texSize");
-      #@gl.uniform2f(texSizeLocation, image.width, image.height);
+      #@gl.uniform2f(texSizeLocation, nativeImage.width, nativeImage.height);
 
       // Set texture
       var texture = #@gl.createTexture();
