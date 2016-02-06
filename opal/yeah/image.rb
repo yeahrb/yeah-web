@@ -8,14 +8,14 @@ class Yeah::Image
 
   def initialize(path)
     @path = path
-    @native = `document.querySelectorAll("#yeah-assets img[data-path='#{path}']")[0]`
+    @native = `YEAH_IMAGES[#{path}]`
   end
 
   def width
-    @native.width
+    `#@native.width`
   end
 
   def height
-    @native.height
+    `#@native.height`
   end
 end
