@@ -14,14 +14,13 @@ class Yeah::SpriteLook < Yeah::AnimationLook
   def animation=(value)
     frames = self.class.animations[value]
 
-    if frames.respond_to? :to_a
-      frames = frames.to_a
+    if frames.respond_to? :first
+      @first_frame = frames.first
+      @last_frame = frames.last
     else
-      frames = [frames]
+      @first_frame = @last_frame = frames
     end
 
-    @first_frame = frames.first
-    @last_frame = frames.last
     @frame = @first_frame
 
     @animation = value
