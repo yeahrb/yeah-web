@@ -3,11 +3,11 @@ class Yeah::FillLook < Yeah::Look
     attr_accessor :width, :height, :color
 
     def size
-      [width, height]
+      [@width, @height]
     end
 
     def size=(value)
-      self.width, self.height = value
+      @width, @height = value
     end
   end
 
@@ -22,11 +22,11 @@ class Yeah::FillLook < Yeah::Look
   end
 
   def size
-    [width, height]
+    [@width, @height]
   end
 
   def size=(value)
-    self.width, self.height = value
+    @width, @height = value
   end
 
   def draw(thing, display)

@@ -16,6 +16,7 @@ require 'yeah/thing'
 require 'yeah/look'
 require 'yeah/fill_look'
 require 'yeah/image_look'
+require 'yeah/animation_look'
 require 'yeah/sprite_look'
 
 Yeah::AssetLoader.load_all do

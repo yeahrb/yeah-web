@@ -8,7 +8,7 @@ class Yeah::ImageLook < Yeah::Look
   def initialize
     super
 
-    self.image = self.class.image
+    @image = self.class.image
   end
 
   def draw(thing, display)
