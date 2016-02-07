@@ -14,10 +14,6 @@ class Yeah::SpriteLook < Yeah::AnimationLook
   def animation=(value)
     frames = self.class.animations[value]
 
-    if frames.respond_to? :keys
-      frames = frames[:frames]
-    end
-
     if frames.respond_to? :to_a
       frames = frames.to_a
     else
