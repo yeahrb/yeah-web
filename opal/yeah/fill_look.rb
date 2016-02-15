@@ -29,7 +29,7 @@ class Yeah::FillLook < Yeah::Look
     @width, @height = value
   end
 
-  def draw(thing, display)
+  def draw(thing, display, elapsed)
     display.fill(color, thing.x, thing.y, width, height)
   end
 end

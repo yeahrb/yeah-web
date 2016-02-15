@@ -37,6 +37,6 @@ class Yeah::Space
   def step(elapsed)
     @things.each { |t| t.act(elapsed) }
     @game.display.clear
-    @things.each { |t| t.look.draw(t, @game.display) }
+    @things.each { |t| t.look.draw(t, @game.display, elapsed) }
   end
 end
