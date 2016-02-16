@@ -3,26 +3,32 @@ class Yeah::SpriteLook < Yeah::AnimationLook
     attr_accessor :animations
   end
 
-  attr_reader :animation
+  attr_accessor :animation
 
   def initialize
     super
 
-    self.animation = self.class.animations.keys.first
+    @animation = self.class.animations.keys.first
   end
 
-  def animation=(value)
-    frames = self.class.animations[value]
+  def draw(thing, display, elapsed)
+    current_animation = animation
 
-    if frames.respond_to? :first
-      @first_frame = frames.first
-      @last_frame = frames.last
-    else
-      @first_frame = @last_frame = frames
+    if current_animation != @last_animation
+      frames = self.class.animations[current_animation]
+
+      if frames.respond_to? :first
+        @first_frame = frames.first
+        @last_frame = frames.last
+      else
+        @first_frame = @last_frame = frames
+      end
+
+      @frame = @first_frame
     end
 
-    @frame = @first_frame
+    @last_animation = current_animation
 
-    @animation = value
+    super
   end
 end

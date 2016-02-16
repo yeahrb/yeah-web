@@ -21,8 +21,8 @@ class Yeah::AnimationLook < Yeah::ImageLook
     @height = self.class.height
     @frame = 0
     @first_frame = 0
-    @speed = self.class.speed || 60
     @last_frame = (@image.width / @width) * (@image.height / @height)
+    @speed = self.class.speed || 60
   end
 
   def size
