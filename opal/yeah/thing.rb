@@ -19,11 +19,11 @@ class Yeah::Thing
   end
 
   def position
-    [x, y]
+    [@x, @y]
   end
 
   def position=(value)
-    self.x, self.y = value
+    @x, @y = value
   end
 
   def act(elapsed)
