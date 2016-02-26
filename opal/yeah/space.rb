@@ -19,6 +19,12 @@ class Yeah::Space
     self.size = self.class.size
     self.color = self.class.color
     @things = []
+
+    self.class.things.each_pair do |klass, all_options|
+      all_options.each do |options|
+        @things << klass.new(game, options)
+      end
+    end
   end
 
   def size

@@ -11,7 +11,11 @@ class Yeah::Thing
     @look = self.class.look.new
 
     # Assign options.
-    options.each { |k, v| self.send("#{k}=", v) }
+    if options.respond_to? :each_pair
+      options.each_pair { |k, v| send("#{k}=", v) }
+    else
+      @x, @y = options
+    end
   end
 
   def position
