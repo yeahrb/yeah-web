@@ -9,6 +9,15 @@ class Yeah::Space
     def size=(value)
       self.width, self.height = value
     end
+
+    private
+
+    def inherited(klass)
+      super
+
+      @color ||= [0.5, 0.5, 0.5]
+      @things ||= {}
+    end
   end
 
   attr_reader :game
@@ -18,8 +27,8 @@ class Yeah::Space
     @game = game
     self.size = self.class.size
     self.color = self.class.color
-    @things = []
 
+    @things = []
     self.class.things.each_pair do |klass, all_options|
       all_options.each do |options|
         @things << klass.new(game, options)
