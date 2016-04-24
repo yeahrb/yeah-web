@@ -19,8 +19,10 @@ require 'yeah/looks/image_look'
 require 'yeah/looks/animation_look'
 require 'yeah/looks/sprite_look'
 
-Yeah::AssetLoader.load_all do
+include Yeah
+
+AssetLoader.load_all do
   require 'game'
 
-  Yeah::Game.subclasses.last.new
+  Game.subclasses.last.new
 end
