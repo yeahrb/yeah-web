@@ -96,6 +96,8 @@ class Yeah::Display
     [`#@canvas.width`, `#@canvas.height`]
   end
   def size=(value)
+    value ||= []
+
     @width, @height = value
 
     %x{
