@@ -2,7 +2,13 @@ class Yeah::Game
   attr_reader :display, :keyboard, :mouse, :space
 
   class << self
-    attr_accessor :title, :space
+    attr_accessor :title, :display_size, :space
+
+    def display_options
+      {
+        size: @display_size
+      }
+    end
 
     private
 
@@ -15,14 +21,10 @@ class Yeah::Game
     def subclasses
       @@subclasses ||= []
     end
-
-    def display
-      @display ||= Struct.new(:size).new
-    end
   end
 
   def initialize
-    @display = Yeah::Display.new(self.class.display.to_h)
+    @display = Yeah::Display.new(self.class.display_options)
     @keyboard = Yeah::Keyboard.new
     @mouse = Yeah::Mouse.new(@display)
     @space = self.class.space.new(self)
