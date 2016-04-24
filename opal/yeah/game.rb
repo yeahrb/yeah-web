@@ -4,6 +4,14 @@ class Yeah::Game
   class << self
     attr_accessor :title, :display_size, :space
 
+    def title
+      @title ||= "Game"
+    end
+
+    def space
+      @space ||= Space
+    end
+
     def display_options
       {
         size: @display_size
@@ -27,7 +35,7 @@ class Yeah::Game
     @display = Display.new(self.class.display_options)
     @keyboard = Keyboard.new
     @mouse = Mouse.new(@display)
-    @space = (self.class.space || Space).new(self)
+    @space = self.class.space.new(self)
 
     # Set web page title.
     `document.getElementsByTagName('title')[0].innerHTML = #{title}`
