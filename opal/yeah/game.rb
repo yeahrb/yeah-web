@@ -24,10 +24,10 @@ class Yeah::Game
   end
 
   def initialize
-    @display = Yeah::Display.new(self.class.display_options)
-    @keyboard = Yeah::Keyboard.new
-    @mouse = Yeah::Mouse.new(@display)
-    @space = (self.class.space || Yeah::Space).new(self)
+    @display = Display.new(self.class.display_options)
+    @keyboard = Keyboard.new
+    @mouse = Mouse.new(@display)
+    @space = (self.class.space || Space).new(self)
 
     # Set web page title.
     `document.getElementsByTagName('title')[0].innerHTML = #{title}`
