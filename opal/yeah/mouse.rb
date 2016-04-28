@@ -63,7 +63,7 @@ class Yeah::Mouse
     @released_buttons[button]
   end
 
-  def step
+  def clear
     @pressed_buttons.clear
     @released_buttons.clear
   end

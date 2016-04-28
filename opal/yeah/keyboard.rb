@@ -147,7 +147,7 @@ class Yeah::Keyboard
     @released_keys[key]
   end
 
-  def step
+  def clear
     @pressed_keys.clear
     @released_keys.clear
   end

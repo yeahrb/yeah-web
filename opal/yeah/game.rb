@@ -49,8 +49,8 @@ class Yeah::Game
         now = Date.now();
 
         #{@space.step(`(now - lastNow) / 1000.0`)}
-        #{@keyboard.step}
-        #{@mouse.step}
+        #{@keyboard.clear}
+        #{@mouse.clear}
 
         lastNow = now;
 
