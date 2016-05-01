@@ -1,6 +1,6 @@
 class Yeah::AnimationLook < Yeah::ImageLook
   class << self
-    attr_accessor :width, :height, :speed
+    attr_accessor :width, :height, :rate
 
     def size
       [@width, @height]
@@ -12,7 +12,7 @@ class Yeah::AnimationLook < Yeah::ImageLook
   end
 
   attr_reader :frame, :first_frame, :last_frame
-  attr_accessor :width, :height, :speed
+  attr_accessor :width, :height, :rate
 
   def initialize
     super
@@ -22,7 +22,7 @@ class Yeah::AnimationLook < Yeah::ImageLook
     @frame = 0
     @first_frame = 0
     @last_frame = (@image.width / @width) * (@image.height / @height)
-    @speed = self.class.speed || 60
+    @rate = self.class.rate || 60
   end
 
   def size
@@ -37,7 +37,7 @@ class Yeah::AnimationLook < Yeah::ImageLook
     x = @frame.floor * @width % @image.width
     y = (@frame.floor * @width / @image.width).floor * @height
     display.draw_image_part(@image, thing.x, thing.y, x, y, @width, @height)
-    @frame += @speed * elapsed
+    @frame += @rate * elapsed
     @frame = @first_frame if @frame >= @last_frame
   end
 end
