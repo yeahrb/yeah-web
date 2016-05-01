@@ -73,4 +73,16 @@ class Yeah::Game
   def title
     self.class.title
   end
+
+  def creator
+    self.class.creator
+  end
+
+  def creators
+    self.class.creators
+  end
+
+  def version
+    self.class.version
+  end
 end
