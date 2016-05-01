@@ -41,7 +41,8 @@ class Yeah::Game
     end
   end
 
-  attr_reader :display, :keyboard, :mouse, :space
+  attr_reader :display, :keyboard, :mouse
+  attr_accessor :space
 
   def initialize
     @display = Display.new(self.class.display_options)
