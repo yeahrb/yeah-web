@@ -16,6 +16,8 @@ class Yeah::Thing
     else
       @x, @y = options
     end
+
+    start
   end
 
   def position
@@ -24,6 +26,10 @@ class Yeah::Thing
 
   def position=(value)
     @x, @y = value
+  end
+
+  def start
+    return
   end
 
   def act(elapsed)
