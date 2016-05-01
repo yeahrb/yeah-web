@@ -1,6 +1,6 @@
 class Yeah::Space
   class << self
-    attr_accessor :width, :height, :color, :things
+    attr_accessor :width, :height, :color, :collisions, :things
 
     def size
       [width, height]
@@ -8,6 +8,10 @@ class Yeah::Space
 
     def size=(value)
       self.width, self.height = value
+    end
+
+    def collisions
+      @collisions ||= RectangleCollisions
     end
 
     private
@@ -21,12 +25,13 @@ class Yeah::Space
   end
 
   attr_reader :game
-  attr_accessor :width, :height, :color, :things
+  attr_accessor :width, :height, :color, :collisions, :things
 
   def initialize(game)
     @game = game
     self.size = self.class.size
     self.color = self.class.color
+    @collisions = self.class.collisions.new
 
     @things = []
     self.class.things.each_pair do |klass, all_options|
@@ -51,6 +56,7 @@ class Yeah::Space
 
   def progress(elapsed)
     @things.each { |t| t.act(elapsed) }
+    @collisions.resolve(@things)
 
     @game.display.clear
     @things.each { |t| t.look.draw(@game.display, elapsed) }

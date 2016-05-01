@@ -1,14 +1,15 @@
 class Yeah::Thing
   class << self
-    attr_accessor :look
+    attr_accessor :look, :body
   end
 
   attr_reader :game
-  attr_accessor :x, :y, :look
+  attr_accessor :x, :y, :look, :body
 
   def initialize(game, options)
     @game = game
     @look = self.class.look.new
+    @body = self.class.body.new
 
     # Assign options.
     if options.respond_to? :each_pair
@@ -33,10 +34,6 @@ class Yeah::Thing
   end
 
   def act(elapsed)
-    return
-  end
-
-  def collide(collision)
     return
   end
 
