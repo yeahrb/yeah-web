@@ -1,6 +1,10 @@
 class Yeah::Thing
   class << self
     attr_accessor :look, :body
+
+    def look
+      @look ||= Look
+    end
   end
 
   attr_reader :game
@@ -9,7 +13,7 @@ class Yeah::Thing
   def initialize(game, options)
     @game = game
     @look = self.class.look.new
-    @body = self.class.body.new
+    @body = self.class.body.new unless self.class.body.nil?
 
     # Assign options.
     if options.respond_to? :each_pair
