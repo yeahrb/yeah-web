@@ -49,9 +49,13 @@ class Yeah::Space
     @game.display.clear_color = value
   end
 
-  def step(elapsed)
+  def progress(elapsed)
     @things.each { |t| t.act(elapsed) }
+
     @game.display.clear
     @things.each { |t| t.look.draw(t, @game.display, elapsed) }
+
+    @game.keyboard.clear
+    @game.mouse.clear
   end
 end

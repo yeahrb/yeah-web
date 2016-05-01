@@ -59,11 +59,7 @@ class Yeah::Game
 
       var loop = function() {
         now = Date.now();
-
-        #{@space.step(`(now - lastNow) / 1000.0`)}
-        #{@keyboard.clear}
-        #{@mouse.clear}
-
+        #{@space.progress(`(now - lastNow) / 1000.0`)}
         lastNow = now;
 
         window.requestAnimationFrame(loop);
