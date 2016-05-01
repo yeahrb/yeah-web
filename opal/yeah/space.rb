@@ -53,7 +53,7 @@ class Yeah::Space
     @things.each { |t| t.act(elapsed) }
 
     @game.display.clear
-    @things.each { |t| t.look.draw(t, @game.display, elapsed) }
+    @things.each { |t| t.look.draw(@game.display, elapsed) }
 
     @game.keyboard.clear
     @game.mouse.clear

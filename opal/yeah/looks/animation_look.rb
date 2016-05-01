@@ -14,7 +14,7 @@ class Yeah::AnimationLook < Yeah::ImageLook
   attr_reader :frame, :first_frame, :last_frame
   attr_accessor :width, :height, :rate
 
-  def initialize
+  def initialize(thing)
     super
 
     @width = self.class.width
@@ -33,10 +33,10 @@ class Yeah::AnimationLook < Yeah::ImageLook
     @width, @height = value
   end
 
-  def draw(thing, display, elapsed)
+  def draw(display, elapsed)
     x = @frame.floor * @width % @image.width
     y = (@frame.floor * @width / @image.width).floor * @height
-    display.draw_image_part(@image, thing.x, thing.y, x, y, @width, @height)
+    display.draw_image_part(@image, @thing.x, @thing.y, x, y, @width, @height)
     @frame += @rate * elapsed
     @frame = @first_frame if @frame >= @last_frame
   end

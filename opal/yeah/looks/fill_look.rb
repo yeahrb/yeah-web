@@ -13,7 +13,7 @@ class Yeah::FillLook < Yeah::Look
 
   attr_accessor :width, :height, :color
 
-  def initialize
+  def initialize(thing)
     super
 
     @width = self.class.width
@@ -29,7 +29,7 @@ class Yeah::FillLook < Yeah::Look
     @width, @height = value
   end
 
-  def draw(thing, display, elapsed)
-    display.fill(color, thing.x, thing.y, width, height)
+  def draw(display, elapsed)
+    display.fill(color, @thing.x, @thing.y, width, height)
   end
 end

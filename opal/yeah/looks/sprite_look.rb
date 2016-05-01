@@ -5,13 +5,13 @@ class Yeah::SpriteLook < Yeah::AnimationLook
 
   attr_accessor :animation
 
-  def initialize
+  def initialize(thing)
     super
 
     @animation = self.class.animations.keys.first
   end
 
-  def draw(thing, display, elapsed)
+  def draw(display, elapsed)
     current_animation = animation
 
     if current_animation != @last_animation
