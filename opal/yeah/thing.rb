@@ -12,8 +12,8 @@ class Yeah::Thing
 
   def initialize(game, options)
     @game = game
-    @look = self.class.look.new
-    @body = self.class.body.new unless self.class.body.nil?
+    @look = self.class.look.new(self)
+    @body = self.class.body.new(self) unless self.class.body.nil?
 
     # Assign options.
     if options.respond_to? :each_pair
