@@ -1,11 +1,21 @@
 class Yeah::Game
-  attr_reader :display, :keyboard, :mouse, :space
-
   class << self
-    attr_accessor :title, :display_size, :space
+    attr_accessor :title, :creators, :version, :display_size, :space
 
     def title
-      @title ||= "Game"
+      @title ||= "untitled"
+    end
+
+    def creator
+      @creators.first
+    end
+
+    def creator=(value)
+      @creators = [value]
+    end
+
+    def creators
+      @creators ||= ["anonymous"]
     end
 
     def space
@@ -30,6 +40,8 @@ class Yeah::Game
       @@subclasses ||= []
     end
   end
+
+  attr_reader :display, :keyboard, :mouse, :space
 
   def initialize
     @display = Display.new(self.class.display_options)
