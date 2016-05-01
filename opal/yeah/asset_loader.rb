@@ -2,8 +2,7 @@ module Yeah::AssetLoader
   def self.load_all(&block)
     # Load all images then yield to passed block.
     %x{
-      // This is used for looking up assets within Yeah::Image.
-      window.YEAH_IMAGES = {};
+      window.YEAH_IMAGES = {}; // for image lookup in Yeah::Image
 
       var imagesLoaded = 0;
 
