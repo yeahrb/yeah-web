@@ -12,6 +12,6 @@ class Yeah::ImageLook < Yeah::Look
   end
 
   def draw(display, elapsed)
-    display.draw_image(image, @thing.x, @thing.y)
+    display.draw_image(image, x, y)
   end
 end

@@ -34,9 +34,9 @@ class Yeah::AnimationLook < Yeah::ImageLook
   end
 
   def draw(display, elapsed)
-    x = @frame.floor * @width % @image.width
-    y = (@frame.floor * @width / @image.width).floor * @height
-    display.draw_image_part(@image, @thing.x, @thing.y, x, y, @width, @height)
+    part_x = @frame.floor * @width % @image.width
+    part_y = (@frame.floor * @width / @image.width).floor * @height
+    display.draw_image_part(@image, x, y, part_x, part_y, @width, @height)
     @frame += @rate * elapsed
     @frame = @first_frame if @frame >= @last_frame
   end
