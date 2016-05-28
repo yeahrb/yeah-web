@@ -12,8 +12,8 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/yeahrb/yeah-web'
   s.license = 'MIT'
 
-  s.author = "Artur Ostręga"
-  s.email = 'artmarost@gmail.com'
+  s.author = "Artur Ostrega"
+  s.email = 'artur@ostrega.me'
 
   s.files = Dir.glob('{lib,opal}/**/*') + %w(LICENSE.txt README.md)
 
