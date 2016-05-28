@@ -10,17 +10,14 @@ class Yeah::Thing
   attr_reader :game
   attr_accessor :x, :y, :look, :body
 
-  def initialize(game, options)
+  def initialize(game, x = 0, y = 0, options = {})
     @game = game
+    @x = x
+    @y = y
     @look = self.class.look.new(self)
     @body = self.class.body.new(self) unless self.class.body.nil?
 
-    # Assign options.
-    if options.respond_to? :each_pair
-      options.each_pair { |k, v| send("#{k}=", v) }
-    else
-      @x, @y = options
-    end
+    options.each_pair { |k, v| send("#{k}=", v) }
 
     prepare
     start

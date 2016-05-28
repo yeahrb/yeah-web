@@ -68,6 +68,10 @@ class Yeah::Space
     @game.mouse.clear
   end
 
+  def create(thing_class, x, y, options)
+    @things << thing_class.new(game, x, y, options)
+  end
+
   private
 
   def prepare
