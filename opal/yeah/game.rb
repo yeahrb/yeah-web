@@ -53,6 +53,9 @@ class Yeah::Game
     # Set web page title.
     `document.getElementsByTagName('title')[0].innerHTML = #{title}`
 
+    prepare
+    start
+
     # Start game loop.
     %x{
       var now,
@@ -84,5 +87,15 @@ class Yeah::Game
 
   def version
     self.class.version
+  end
+
+  private
+
+  def prepare
+    return
+  end
+
+  def start
+    return
   end
 end

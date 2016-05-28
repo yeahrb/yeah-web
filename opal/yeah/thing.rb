@@ -22,6 +22,7 @@ class Yeah::Thing
       @x, @y = options
     end
 
+    prepare
     start
   end
 
@@ -31,10 +32,6 @@ class Yeah::Thing
 
   def position=(value)
     @x, @y = value
-  end
-
-  def start
-    return
   end
 
   def act(elapsed)
@@ -57,5 +54,15 @@ class Yeah::Thing
 
   def space
     game.space
+  end
+
+  private
+
+  def prepare
+    return
+  end
+
+  def start
+    return
   end
 end

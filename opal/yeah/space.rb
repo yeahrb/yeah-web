@@ -39,6 +39,9 @@ class Yeah::Space
         @things << klass.new(game, options)
       end
     end
+
+    prepare
+    start
   end
 
   def size
@@ -63,5 +66,15 @@ class Yeah::Space
 
     @game.keyboard.clear
     @game.mouse.clear
+  end
+
+  private
+
+  def prepare
+    return
+  end
+
+  def start
+    return
   end
 end
