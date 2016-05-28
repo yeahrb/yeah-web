@@ -1,21 +1,13 @@
 class Yeah::Game
   class << self
-    attr_accessor :title, :creators, :version, :display_size, :space
+    attr_accessor :title, :creator, :version, :display_size, :space
 
     def title
       @title ||= "untitled"
     end
 
     def creator
-      @creators.first
-    end
-
-    def creator=(value)
-      @creators = [value]
-    end
-
-    def creators
-      @creators ||= ["anonymous"]
+      @creator ||= "anonymous"
     end
 
     def space
@@ -79,10 +71,6 @@ class Yeah::Game
 
   def creator
     self.class.creator
-  end
-
-  def creators
-    self.class.creators
   end
 
   def version
