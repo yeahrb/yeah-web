@@ -30,6 +30,6 @@ class Yeah::ColorRectangleLook < Yeah::Look
   end
 
   def draw(display, elapsed)
-    display.fill(color, x, y, width, height)
+    display.draw_color_rectangle(color, x, y, width, height)
   end
 end

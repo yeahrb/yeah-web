@@ -120,7 +120,7 @@ class Yeah::Display
     `#@gl.clear(#@gl.COLOR_BUFFER_BIT)`
   end
 
-  def fill(color, x, y, width, height)
+  def draw_color_rectangle(color, x, y, width, height)
     %x{
       // Provide rectangle coordinates
       var positionLocation = #@gl.getAttribLocation(#@gl_program, "a_position");
