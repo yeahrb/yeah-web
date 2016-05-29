@@ -1,6 +1,6 @@
 class Yeah::RectangleBody < Yeah::Body
   class << self
-    attr_accessor :width, :height
+    attr_accessor :width, :height, :offset_x, :offset_y
 
     def size
       [@width, @height]
@@ -8,6 +8,14 @@ class Yeah::RectangleBody < Yeah::Body
 
     def size=(value)
       @width, @height = value
+    end
+
+    def offset_x
+      @offset_x ||= 0
+    end
+
+    def offset_y
+      @offset_y ||= 0
     end
   end
 
