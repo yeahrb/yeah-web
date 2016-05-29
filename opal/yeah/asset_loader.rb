@@ -1,24 +1,37 @@
 module Yeah::AssetLoader
   def self.load_all(&block)
-    # Load all images then yield to passed block.
+    # Load all assets then yield to passed block.
     %x{
-      window.YEAH_IMAGES = {}; // for image lookup in Yeah::Image
+      window.yeahImages = {}; // for image lookup in Yeah::Image
+      window.yeahAudios = {}; // for audio lookup in Yeah::Audio
 
-      var imagesLoaded = 0;
+      var assetsLoaded = 0;
+
+      var onAssetLoad = function() {
+        assetsLoaded++;
+
+        if (assetsLoaded == YEAH_ASSET_TOTAL) {
+          #{block.call}
+        }
+      }
 
       for (var i = 0; i < YEAH_IMAGE_PATHS.length; i++) {
         var image = new Image();
+        image.onload = onAssetLoad;
         image.src = "/assets/images/" + YEAH_IMAGE_PATHS[i];
+        yeahImages[YEAH_IMAGE_PATHS[i]] = image;
+      }
 
-        YEAH_IMAGES[YEAH_IMAGE_PATHS[i]] = image;
+      for (var i = 0; i < YEAH_AUDIO_PATHS.length; i++) {
+        var audio = new Audio();
 
-        image.onload = function() {
-          imagesLoaded++;
-
-          if (imagesLoaded == YEAH_IMAGE_PATHS.length) {
-            #{block.call}
-          }
+        audio.oncanplaythrough = function() {
+          onAssetLoad();
+          audio.oncanplaythrough = null;
         }
+
+        audio.src = "/assets/audios/" + YEAH_AUDIO_PATHS[i];
+        yeahAudios[YEAH_AUDIO_PATHS[i]] = audio;
       }
     }
   end

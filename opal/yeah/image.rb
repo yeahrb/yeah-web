@@ -8,7 +8,7 @@ class Yeah::Image
 
   def initialize(path)
     @path = path
-    @native = `YEAH_IMAGES[#{path}]`
+    @native = `yeahImages[#{path}]`
   end
 
   def width

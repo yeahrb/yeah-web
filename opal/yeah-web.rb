@@ -6,6 +6,7 @@ module Yeah
 end
 
 require 'yeah/image'
+require 'yeah/audio'
 require 'yeah/asset_loader'
 require 'yeah/display'
 require 'yeah/keyboard'

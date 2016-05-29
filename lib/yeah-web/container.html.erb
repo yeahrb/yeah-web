@@ -47,6 +47,12 @@
     window.YEAH_IMAGE_PATHS = <%= Dir['**/*'].select { |p| File.file? p } %>;
     <% end %>
 
+    <% Dir.chdir('assets/audios') do %>
+    window.YEAH_AUDIO_PATHS = <%= Dir['**/*'].select { |p| File.file? p } %>;
+    <% end %>
+
+    window.YEAH_ASSET_TOTAL = YEAH_IMAGE_PATHS.length + YEAH_AUDIO_PATHS.length;
+
     /*document.addEventListener('keydown', function(event) {
       event.preventDefault();
     });*/
