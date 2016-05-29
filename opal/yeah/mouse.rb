@@ -48,7 +48,7 @@ class Yeah::Mouse
   end
 
   def position
-    [x, y]
+    [@x, @y]
   end
 
   def pressing?(button)
