@@ -1,4 +1,4 @@
-class Yeah::FillLook < Yeah::Look
+class Yeah::ColorRectangleLook < Yeah::Look
   class << self
     attr_accessor :width, :height, :color
 
