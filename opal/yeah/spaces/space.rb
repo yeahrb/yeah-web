@@ -1,6 +1,6 @@
 class Yeah::Space
   class << self
-    attr_accessor :width, :height, :color, :collisions, :things
+    attr_accessor :width, :height, :color, :collisions
 
     def size
       [width, height]
@@ -17,8 +17,6 @@ class Yeah::Space
     private
 
     def inherited(klass)
-      super
-
       @color ||= [0.5, 0.5, 0.5]
       @things ||= {}
     end
@@ -32,13 +30,7 @@ class Yeah::Space
     self.size = self.class.size
     self.color = self.class.color
     @collisions = self.class.collisions.new
-
     @things = []
-    self.class.things.each_pair do |klass, all_options|
-      all_options.each do |options|
-        @things << klass.new(game, options)
-      end
-    end
 
     prepare
     start
